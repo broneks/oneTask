@@ -1,0 +1,40 @@
+#wrapper {
+	width: 525px;
+	margin: 50px auto;
+}
+
+#countdown { display: none; }
+#cancel { display: block; }
+
+h1 {
+	margin-bottom: 30px;
+	padding: 10px 0;
+	text-align: center;
+	color: #fff;
+}
+
+#progress-outer {
+	margin-bottom: 50px;
+	border: 1px solid #ddd;
+}
+
+#progress-bar {
+	height: 17px;
+	width: 0;
+
+	/*-webkit-transition: width 1s linear 0s;
+	-moz-transition: width 1s linear 0s;
+	-o-transition: width 1s linear 0s;
+	transition: width 1s linear 0s;*/
+}
+
+.beveled-corners {    
+	background: #2ecc71; /* fallback */
+	background:
+		linear-gradient(135deg, transparent 10px, #2ecc71 0) top left,
+		linear-gradient(225deg, transparent 10px, #2ecc71 0) top right,
+		linear-gradient(315deg, transparent 10px, #2ecc71 0) bottom right,
+		linear-gradient(45deg,  transparent 10px, #2ecc71 0) bottom left;
+	background-size: 50% 50%;
+	background-repeat: no-repeat;
+}

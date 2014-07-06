@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>You Had ONE Task!</title>
+
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div id="wrapper">
+		<!-- countdown view where timer and goal are displayed -->
+		<div id="countdown">
+			<div id="progress-outer">
+				<div id="progress-bar"></div>				
+			</div>
+
+			<div id="count">
+				<span id="timer"></span>
+				<span id="goal"></span>
+			</div>
+
+			<div id="trigger">
+				<label for="completed">Completed the task?</label>
+				<input type="checkbox" id="completed">
+			</div>
+
+			<input type="button" id="cancel" value="Cancel">
+		</div>
+		
+		<!-- input form for setting a task and time limit -->
+		<div id="startscreen">
+			<h1 class="beveled-corners">You Had <em>One</em> Task!</h1>
+
+			<label for="task">Task:</label>
+			<input type="text" id="task" placeholder="Make Lunch">
+
+			<label for="time-limit">Time Limit (Minutes):</label>
+			<input type="text" id="time-limit" placeholder="15">
+
+			<input type="button" id="go" value="GO">
+		</div>
+	</div>
+	
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
