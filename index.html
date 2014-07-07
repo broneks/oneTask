@@ -30,13 +30,61 @@
 		
 		<!-- input form for setting a task and time limit -->
 		<div id="startscreen">
-			<h1 class="beveled-corners">You Had <em>One</em> Task!</h1>
+			<h1>You Had <em>One</em> Task!</h1>
 
 			<label for="task">Task:</label>
 			<input type="text" id="task" placeholder="Make Lunch">
 
-			<label for="time-limit">Time Limit (Minutes):</label>
-			<input type="text" id="time-limit" placeholder="15">
+			<label for="time-limit">Time Limit:</label>
+			<div id="timepicker">
+				<div id="hours">
+					<div class="digit-wrapper">
+						<div class="arrow up">
+							<div class="increase"></div>
+						</div>
+						<div class="digit" id="hour1">0</div>
+						<div class="arrow down">
+							<div class="decrease"></div>
+						</div>
+					</div>
+
+					<div class="digit-wrapper">
+						<div class="arrow up">
+							<div class="increase"></div>
+						</div>
+						<div class="digit" id="hour2">0</div>
+						<div class="arrow down">
+							<div class="decrease"></div>
+						</div>
+					</div>
+					<div class="tag">Hours</div>
+				</div>
+				
+				<div class="colon">:</div>
+				
+				<div id="mins">
+					<div class="digit-wrapper">
+						<div class="arrow up">
+							<div class="increase"></div>
+						</div>
+						<div class="digit" id="min1">0</div>
+						<div class="arrow down">
+							<div class="decrease"></div>
+						</div>
+					</div>
+
+					<div class="digit-wrapper">
+						<div class="arrow up">
+							<div class="increase"></div>
+						</div>
+						<div class="digit" id="min2">0</div>
+						<div class="arrow down">
+							<div class="decrease"></div>
+						</div>
+					</div>
+					<div class="tag">Minutes</div>
+				</div>
+			</div>
 
 			<input type="button" id="go" value="GO">
 		</div>

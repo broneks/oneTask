@@ -11,6 +11,7 @@ h1 {
 	padding: 10px 0;
 	text-align: center;
 	color: #fff;
+	background-color: #2ecc71;
 }
 
 #progress-outer {
@@ -28,13 +29,84 @@ h1 {
 	transition: width 1s linear 0s;*/
 }
 
-.beveled-corners {    
-	background: #2ecc71; /* fallback */
-	background:
-		linear-gradient(135deg, transparent 10px, #2ecc71 0) top left,
-		linear-gradient(225deg, transparent 10px, #2ecc71 0) top right,
-		linear-gradient(315deg, transparent 10px, #2ecc71 0) bottom right,
-		linear-gradient(45deg,  transparent 10px, #2ecc71 0) bottom left;
-	background-size: 50% 50%;
-	background-repeat: no-repeat;
+#startscreen label { display: block; }
+
+input[type=text] {
+	width: 100%;
+	margin: 25px 0;
+	padding: 7px;
+}
+
+#go {
+	width: 100%;
+	padding: 7px 0;
+}
+
+
+
+/*----- Timepicker -----*/
+
+#timepicker {
+	width: 255px;
+	margin: 20px auto;
+	font-family: arial, sans-serif;
+}
+
+#timepicker .tag {
+	padding: 7px 0;
+	text-align: center;
+}
+
+#timepicker #hours,
+#timepicker #mins,
+#timepicker .colon,
+#timepicker .digit-wrapper {
+	display: inline-block;
+}
+
+#timepicker .arrow {
+	padding: 1px;
+	background-color: #efefef;
+	cursor: pointer;
+}
+#timepicker .up {
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+#timepicker .down {
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+#timepicker .increase,
+#timepicker .decrease {
+	width: 0; 
+	height: 0; 
+	margin: 5px auto;
+	border-left: 7px solid transparent;
+	border-right: 7px solid transparent;
+}
+#timepicker .increase { border-bottom: 7px solid #111; }
+#timepicker .decrease { border-top: 7px solid #111; }
+
+#timepicker .digit {
+	width: 50px;
+	height: 80px;
+	font-size: 2.7em;
+	text-align: center;
+	line-height: 80px;
+	border: 1px solid #ddd;
+	background-color: #fff;
+}
+
+#timepicker .colon {
+	width: 25px;
+	height: 120px;
+	font-size: 2.7em;
+	vertical-align: bottom;
+	text-align: center;
 }

@@ -10,9 +10,17 @@ var $elems = {
         timer:     $('#timer'),
         goal:      $('#goal'),
         task:      $('#task'),
-        limit:     $('#time-limit'),
         cancel:    $('#cancel'),
         go:        $('#go')
+    },
+    $timepicker = {
+        // timepicker elements
+        arrowdown: $('.arrow.down'),
+        arrowup:   $('.arrow.up'),
+        hour1: $('#hour1'),
+        hour2: $('#hour2'),
+        min1:  $('#min1'),
+        min2:  $('#min2')
     },
     helper = {},
     timer  = {},
@@ -25,6 +33,19 @@ var $elems = {
 //
 ////////////
 
+helper.timeToSeconds = function() {
+    var hours = parseInt($timepicker.hour1.html() + $timepicker.hour2.html());
+    var mins  = parseInt($timepicker.min1.html() + $timepicker.min2.html());
+
+    return hours * 3600 + mins * 60;
+};
+
+helper.clearTimepicker = function() {
+    $timepicker.hour1.html(0);
+    $timepicker.hour2.html(0);
+    $timepicker.min1.html(0);
+    $timepicker.min2.html(0);
+};
 
 helper.showStartscreen = function() {
     // show the startscreen so a new task can be submitted
@@ -58,10 +79,10 @@ timer.callback = null;
 
 timer.init = function(settings) {
     // unix timestamp (in seconds) at which the timer will reach zero
-    timer.endtime  = settings.endtime || Math.floor((new Date().getTime() + (settings.timeLimit * 60000)) / 1000);
+    timer.endtime  = settings.endtime || Math.floor((new Date().getTime() + settings.timeLimit * 1000) / 1000);
 
     // width of the progress bar (based on the task's time limit in seconds)
-    timer.barWidth = settings.barWidth || settings.timeLimit * 60;
+    timer.barWidth = settings.barWidth || settings.timeLimit;
 
     // success callback for when the task is completed
     timer.callback = (typeof settings.output === 'function' ?
@@ -146,7 +167,7 @@ timer.timeOut = function() {
     // get the current task from the cookie
     var task = cookie.get()[1].split('_')[1].toLowerCase();
 
-    $elems.goal.html("Oh No! Time is up for the task: " + task);
+    $elems.goal.html('Oh No! Time\'s up for the task: ' + task);
 };
 
 
@@ -164,9 +185,8 @@ cookie.create = function(value) {
         // destroy all previous cookies
         cookie.destroy();
 
-        // calculate a random name and then create a cookie (max-age = a week)
-        var name = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
-        document.cookie = name + '=' + value + '; max-age=604800; path=/';
+        // max-age = a week
+        document.cookie = 'YHOJ=' + value + '; max-age=604800; path=/';
     }
 };
 
@@ -182,7 +202,7 @@ cookie.destroy = function() {
     
     // destroy all cookies
     for (var i = 0; i < c.length; i++) {
-        document.cookie = c[i].split('=')[0] +"=; max-age=0; path=/";
+        document.cookie = c[i].split('=')[0] + '=; max-age=0; path=/';
     }
 };
 
@@ -209,25 +229,44 @@ $(document).ready(function() {
             task: c[1],
             barWidth: c[2],
             output: function() {
-                $elems.goal.html("Congratulations!!!");
+                $elems.goal.html('Congratulations!!!');
             }
         });
     }
 });
 
+// timepicker increase number
+$timepicker.arrowup.on('click', function() {
+    var $digit = $(this).siblings('.digit');
+    var increment = parseInt($digit.html()) + 1;
+
+    if      ($digit[0].id === 'min1' && increment > 5) $digit.html(0);
+    else if (increment > 9) $digit.html(0);
+    else if (increment < 0) $digit.html(9);
+    else    $digit.html(increment);
+});
+
+// timepicker decrease number
+$timepicker.arrowdown.on('click', function() {
+    var $digit = $(this).siblings('.digit');
+    var decrement = parseInt($digit.html()) - 1;
+
+    if      ($digit[0].id === 'min1' && decrement < 0) $digit.html(5);
+    else if (decrement > 9) $digit.html(0);
+    else if (decrement < 0) $digit.html(9);
+    else    $digit.html(decrement);
+});
+
 // "Go" button clicked and new task is submitted
 $elems.go.on('click', function() {
+
+    // get inputted time in seconds
+    var time = helper.timeToSeconds();
+
     // validation check for empty fields
-    if (!$elems.limit.val() || !$elems.task.val()) {
+    if (!$elems.task.val() || !time) {
 
-        alert('Please fill in all the fields.');
-
-    // validation check for a time limit that is less than zero, not a number or infinite
-    } else if ($elems.limit.val() <= 0 ||
-               isNaN(parseFloat( $elems.limit.val())) && 
-               !isFinite($elems.limit.val())) {
-
-        alert('Time limit must be a positive number.');
+        alert('Both a task and a time limit are needed!');
 
     } else {
     
@@ -236,9 +275,9 @@ $elems.go.on('click', function() {
         // start the timer with the new task and time limit
         timer.init({
             task: $elems.task.val(),
-            timeLimit: $elems.limit.val(),
+            timeLimit: time,
             output: function() {
-                $elems.goal.html("Congratulations!!!");
+                $elems.goal.html('Congratulations!!!');
             }
         });
 
@@ -247,7 +286,7 @@ $elems.go.on('click', function() {
 
         // clear inputs
         $elems.task.val('');
-        $elems.limit.val('');
+        helper.clearTimepicker();
     }
 });
 
