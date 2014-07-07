@@ -8,6 +8,7 @@ var $elems = {
         completed: $('#completed'),
         trigger:   $('#trigger'),
         timer:     $('#timer'),
+        goalwrap:  $('#goal-outer'),
         goal:      $('#goal'),
         task:      $('#task'),
         cancel:    $('#cancel'),
@@ -47,7 +48,16 @@ helper.clearTimepicker = function() {
     $timepicker.min2.html(0);
 };
 
+helper.clearTextNodes = function($el) {
+    $el.contents().filter(function() {
+        return this.nodeType === 3;
+    }).remove();
+};
+
 helper.showStartscreen = function() {
+    // clear text in #goal wrapper 
+    helper.clearTextNodes($elems.goalwrap);
+
     // show the startscreen so a new task can be submitted
     $elems.countdown.hide();
     $elems.startscreen.fadeIn();
@@ -90,7 +100,8 @@ timer.init = function(settings) {
                       function() { console.log('Congratulations!'); });
 
     // display the goal to be completed
-    $elems.goal.html('... time left to: ' + settings.task.toLowerCase());
+    $elems.goalwrap.prepend('... time left to: ');
+    $elems.goal.html(settings.task.toLowerCase());
 
     // show the checkbox
     $elems.trigger.show();
@@ -160,6 +171,7 @@ timer.finish = function() {
     // clear timer and goal display
     $elems.timer.empty();
     $elems.goal.empty();
+    helper.clearTextNodes($elems.goalwrap);
 };
 
 // display fail message when the timer has run out
@@ -167,7 +179,8 @@ timer.timeOut = function() {
     // get the current task from the cookie
     var task = cookie.get()[1].split('_')[1].toLowerCase();
 
-    $elems.goal.html('Oh No! Time\'s up for the task: ' + task);
+    $elems.goalwrap.prepend('Oh No! Time\'s up for the task: ');
+    $elems.goal.html(task);
 };
 
 
@@ -229,7 +242,7 @@ $(document).ready(function() {
             task: c[1],
             barWidth: c[2],
             output: function() {
-                $elems.goal.html('Congratulations!!!');
+                $elems.goalwrap.prepend('Congratulations!!!');
             }
         });
     }
@@ -277,7 +290,7 @@ $elems.go.on('click', function() {
             task: $elems.task.val(),
             timeLimit: time,
             output: function() {
-                $elems.goal.html('Congratulations!!!');
+                $elems.goalwrap.prepend('Congratulations!!!');
             }
         });
 
