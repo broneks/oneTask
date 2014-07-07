@@ -194,12 +194,15 @@ timer.timeOut = function() {
 // Currently, only ONE cookie exists on the client at any one time
 
 cookie.create = function(value) {
+    var d = new Date();
+
     if (value) {
         // destroy all previous cookies
         cookie.destroy();
 
-        // max-age = a week
-        document.cookie = 'YHOJ=' + value + '; max-age=604800; path=/';
+        // max-age & expires = a week
+        d.setTime(d.getTime() + 10080 * 60 * 1000);
+        document.cookie = 'YHOJ=' + value + '; max-age=604800; expires=' + d.toUTCString() + '; path=/';
     }
 };
 
@@ -215,7 +218,7 @@ cookie.destroy = function() {
     
     // destroy all cookies
     for (var i = 0; i < c.length; i++) {
-        document.cookie = c[i].split('=')[0] + '=; max-age=0; path=/';
+        document.cookie = c[i].split('=')[0] + '=; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
     }
 };
 
