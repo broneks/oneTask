@@ -10,7 +10,8 @@ var $elems = {
         timer:     $('#timer'),
         goalwrap:  $('#goal-outer'),
         goal:      $('#goal'),
-        task:      $('#task')
+        task:      $('#task'),
+        details:   $('#details')
     },
     $timepicker = {
         // timepicker elements
@@ -62,9 +63,11 @@ helper.showStartscreen = function() {
 };
 
 helper.showCountdown = function(setting) {
-    // hide the startscreen and show the countdown
+    // close info details (if opened) and hide startscreen
+    if ($elems.details.is(':visible')) $elems.details.hide();
     $elems.startscreen.hide();
     
+    // show the countdown
     if (setting && setting.noFade) {
         $elems.countdown.show();
     } else { 
@@ -318,5 +321,5 @@ $('#cancel').on('click', function() {
 // "Need help getting started" button that reveals details about the app
 $('#info').on('click', function(e) {
     e.preventDefault();
-    $('#details').stop().slideToggle();
+    $elems.details.stop().slideToggle();
 });
