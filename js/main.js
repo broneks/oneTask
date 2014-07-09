@@ -143,19 +143,19 @@ timer.addZero = function(num) {
 };
 
 timer.progressBar = function(progress) {
-    var barFilled = progress / timer.barWidth * 100;
+    var barFilled = 100 - (progress / timer.barWidth * 100);
 
-    if (barFilled < 100) {
+    // if there is time left and the progress bar is still filled
+    if (barFilled) {
         $elems.progress.css('width', barFilled + '%');
 
         // set the bar colour based on percentage filled
-        if      (barFilled < 50)                    $elems.progress.css('background-color', '#2ecc71');
-        else if (barFilled >= 50 && barFilled < 70) $elems.progress.css('background-color', '#f1c40f');
-        else if (barFilled >= 70 && barFilled < 90) $elems.progress.css('background-color', '#f39c12');
-        else if (barFilled >= 90)                   $elems.progress.css('background-color', '#e74c3c');
+        if      (barFilled > 50)                    $elems.progress.css('background-color', '#2ecc71');
+        else if (barFilled <= 50 && barFilled > 30) $elems.progress.css('background-color', '#f1c40f');
+        else if (barFilled <= 30 && barFilled > 10) $elems.progress.css('background-color', '#f39c12');
+        else if (barFilled <= 10)                   $elems.progress.css('background-color', '#e74c3c');
     } else {
-       $elems.progress.css('width', '100%');
-       $elems.progress.css('background-color', '#e74c3c');
+       $elems.progress.css('width', '0');
     }
 };
 

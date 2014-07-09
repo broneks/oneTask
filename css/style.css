@@ -25,13 +25,15 @@ h1 {
 }
 
 #progress-outer {
+	overflow: hidden;
 	margin-bottom: 50px;
 	border: 1px solid #ddd;
 }
 
 #progress-bar {
+	float: right;
 	height: 30px;
-	width: 0;
+	width: 100%;
 
 	/*-webkit-transition: width 1s linear 0s;
 	-moz-transition: width 1s linear 0s;
