@@ -10,9 +10,7 @@ var $elems = {
         timer:     $('#timer'),
         goalwrap:  $('#goal-outer'),
         goal:      $('#goal'),
-        task:      $('#task'),
-        cancel:    $('#cancel'),
-        go:        $('#go')
+        task:      $('#task')
     },
     $timepicker = {
         // timepicker elements
@@ -274,7 +272,7 @@ $timepicker.arrowdown.on('click', function() {
 });
 
 // "Go" button clicked and new task is submitted
-$elems.go.on('click', function() {
+$('#go').on('click', function() {
 
     // get inputted time in seconds
     var time = helper.timeToSeconds();
@@ -307,7 +305,7 @@ $elems.go.on('click', function() {
 });
 
 // "Cancel" button clicked during or after countdown
-$elems.cancel.on('click', function() {
+$('#cancel').on('click', function() {
     // stop the timer and destroy any cookies
     if (cookie.get()) {
         timer.finish();
@@ -315,4 +313,10 @@ $elems.cancel.on('click', function() {
     }
 
     helper.showStartscreen();
+});
+
+// "Need help getting started" button that reveals details about the app
+$('#info').on('click', function(e) {
+    e.preventDefault();
+    $('#details').stop().slideToggle();
 });
