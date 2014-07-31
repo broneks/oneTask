@@ -1,0 +1,208 @@
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'Open Sans', sans-serif;
+	background-color: #eee;
+}
+
+#startscreen label,
+input[type=text] {
+	font-size: 1.1em;
+}
+
+#wrapper {
+	max-width: 525px;
+	margin: 50px auto;
+}
+
+#countdown { display: none; }
+#cancel { 
+	display: block; 
+	margin-top: 30px;
+}
+#trigger { margin-top: 30px; }
+
+h1 {
+	margin-bottom: 40px;
+	padding: 10px 0 30px;
+	text-align: center;
+	font-weight: 300;
+	font-size: 3.5em;
+	color: #D4145A;
+	letter-spacing: 0.1em;
+	border-bottom: 1px solid #ddd;
+}
+
+h1 em {
+	color: #F7931E;
+	text-decoration: underline;
+	font-style: normal;
+	font-weight: bold;
+	letter-spacing: 0;
+	font-family: Georgia, serif;
+}
+
+#info {
+	display: inline-block;
+	margin: 30px 0 15px;
+	padding-left: 20px;
+	font-size: .9em;
+	font-family: arial, sans-serif;
+	text-decoration: none;
+	color: #777;
+	background: url(../img/plus.png) no-repeat scroll 0 3px transparent;
+}
+#details {
+	display: none;
+	padding: 6px 12px;
+	background-color: #fff;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	line-height: 1.5em;
+	color: #777;
+}
+
+#progress-outer {
+	overflow: hidden;
+	margin-bottom: 50px;
+	border: 1px solid #ddd;
+}
+
+#progress-bar {
+	float: right;
+	height: 30px;
+	width: 100%;
+
+	/*-webkit-transition: width 1s linear 0s;
+	-moz-transition: width 1s linear 0s;
+	-o-transition: width 1s linear 0s;
+	transition: width 1s linear 0s;*/
+}
+
+#startscreen label { 
+	display: block; 
+	font-style: italic;
+	color: #D4145A;
+}
+
+input[type=text] {
+	width: 100%;
+	margin: 15px 0 30px;
+	padding: 10px 7px;
+	border: 0;
+	color: #777;
+	box-shadow: 2px 2px 1px #aaa;
+}
+
+#go {
+	width: 100%;
+	padding: 2px 0;
+	border: 1px solid #ddd;
+	background-color: #F7931E;
+	color: #fff;
+	font-size: 1.5em;
+}
+#go:hover,
+#go:focus,
+#go:active {
+	background-color: #f38709;
+}
+
+#goal {
+	font-weight: bold;
+	color: #2ecc71;
+}
+
+#cancel {
+	padding: 3px 9px;
+	border: 1px solid #ddd;
+	background-color: #F7931E;
+	color: #fff;
+}
+#cancel:hover,
+#cancel:focus,
+#cancel:active {
+	background-color: #f38709;
+}
+
+
+/*----- Timepicker -----*/
+
+#timepicker {
+	width: 275px;
+	margin: 20px auto;
+	font-family: arial, sans-serif;
+}
+
+#timepicker .tag {
+	padding: 7px 0;
+	text-align: center;
+	color: #D4145A;
+}
+
+#timepicker #hours,
+#timepicker #mins,
+#timepicker .colon,
+#timepicker .digit-wrapper {
+	display: inline-block;
+}
+
+#timepicker .digit-wrapper + .digit-wrapper {
+	margin-left: -5px;
+}
+
+#timepicker .arrow {
+	padding: 1px;
+	background-color: #D4145A;
+	cursor: pointer;
+}
+
+#timepicker .increase,
+#timepicker .decrease {
+	width: 0; 
+	height: 0; 
+	margin: 10px auto;
+	border-left: 17px solid transparent;
+	border-right: 17px solid transparent;
+}
+#timepicker .increase { border-bottom: 12px solid #f48db3; }
+#timepicker .decrease { border-top: 12px solid #f48db3; }
+
+#timepicker .digit {
+	width: 60px;
+	height: 80px;
+	font-size: 2.7em;
+	text-align: center;
+	line-height: 80px;
+	background-color: #D4145A;
+	color: #fff;
+}
+
+#timepicker .colon {
+	width: 25px;
+	height: 135px;
+	font-size: 2.7em;
+	vertical-align: bottom;
+	text-align: center;
+	color: #D4145A;
+}
+
+@media screen and (max-width: 525px) {
+
+	h1 {
+		font-size: 2.5em;
+	}
+
+	#startscreen label { 
+		text-align: center;
+	}
+
+	input[type=text] {
+		margin: 15px 0 30px;
+		box-shadow: none;
+	}
+}
