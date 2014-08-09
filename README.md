@@ -1,4 +1,4 @@
-[Click here to view the site](http://one-task.herokuapp.com)
+[Click here to view the site](http://yhoj.herokuapp.com)
 
 \*\* To get the cookies feature to work for the local files, open them in FIREFOX
 
@@ -6,7 +6,9 @@ Developed by: Bronek S.
 
 Concept by: Tyler S.
 
-Collaborating with: Ann T. & Becca M.
+Graphics & Design by: Ann T. 
+
+Witty Writing by: Becca M.
 
 To Do:
 

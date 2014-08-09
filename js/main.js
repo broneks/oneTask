@@ -22,6 +22,10 @@ var $elems = {
         min1:  $('#min1'),
         min2:  $('#min2')
     },
+    results = {
+        congrats: [121, 777],
+        fail:     [387, 442]
+    },
     helper = {},
     timer  = {},
     cookie = {};
@@ -51,6 +55,10 @@ helper.clearTextNodes = function($el) {
     $el.contents().filter(function() {
         return this.nodeType === 3;
     }).remove();
+};
+
+helper.escapeInput = function(str) {
+    return str.replace(/[|]/g, '');
 };
 
 helper.showStartscreen = function() {
@@ -86,7 +94,6 @@ helper.showCountdown = function(setting) {
 timer.interval = null;
 timer.endtime  = null;
 timer.barWidth = null;
-timer.callback = null;
 
 timer.init = function(settings) {
     // unix timestamp (in seconds) at which the timer will reach zero
@@ -94,11 +101,6 @@ timer.init = function(settings) {
 
     // width of the progress bar (based on the task's time limit in seconds)
     timer.barWidth = settings.barWidth || settings.timeLimit;
-
-    // success callback for when the task is completed
-    timer.callback = (typeof settings.output === 'function' ?
-                      settings.output : 
-                      function() { console.log('Congratulations!'); });
 
     // display the goal to be completed
     $elems.goalwrap.prepend('... time left to: ');
@@ -129,12 +131,13 @@ timer.tick = function() {
     // if the task has been completed, call the success callback
     if ($elems.completed.is(':checked')) {
         timer.finish();
-        timer.callback();
+        timer.callback(1);
         cookie.destroy();
 
     } else if (timeHasRunOut) {
         timer.finish();
-        timer.timeOut();
+        timer.callback(0);
+        cookie.destroy();
     }
 };
 
@@ -175,13 +178,24 @@ timer.finish = function() {
     helper.clearTextNodes($elems.goalwrap);
 };
 
-// display fail message when the timer has run out
-timer.timeOut = function() {
-    // get the current task from the cookie
-    var task = cookie.get()[1].split('_')[1].toLowerCase();
+// random congrats & fail callbacks
+timer.callback = function(status) {
+    var randCongrats = results.congrats[Math.floor(Math.random() * results.congrats.length)],
+        randFail     = results.fail[Math.floor(Math.random() * results.fail.length)],
+        nextPage;
 
-    $elems.goalwrap.prepend('Oh No! Time\'s up for the task: ');
-    $elems.goal.html(task);
+    if (status) {
+        nextPage = 'congrats/' + randCongrats + '.html';
+        $elems.goalwrap.prepend('Congratulations!');
+
+    } else {
+        nextPage = 'fail/' + randFail + '.html';
+        $elems.goalwrap.prepend('Oh No! Time\'s up for the task...');
+    }
+
+    $('body').fadeOut(1000, function() {
+        window.location = nextPage;
+    });
 };
 
 
@@ -234,7 +248,7 @@ cookie.destroy = function() {
 $(document).ready(function() {
     // if a cookie is already set, go straight to the timer & task currently in progress
     if (cookie.get()) {
-        var c = cookie.get()[1].split('_'); 
+        var c = cookie.get()[1].split('|'); 
 
         helper.showCountdown({
             noFade: true
@@ -244,10 +258,7 @@ $(document).ready(function() {
         timer.init({
             endtime: c[0],
             task: c[1],
-            barWidth: c[2],
-            output: function() {
-                $elems.goalwrap.prepend('Congratulations!!!');
-            }
+            barWidth: c[2]
         });
     }
 });
@@ -291,15 +302,12 @@ $('#go').on('click', function() {
 
         // start the timer with the new task and time limit
         timer.init({
-            task: $elems.task.val(),
-            timeLimit: time,
-            output: function() {
-                $elems.goalwrap.prepend('Congratulations!!!');
-            }
+            task: helper.escapeInput($elems.task.val()),
+            timeLimit: time
         });
 
         // create a cookie
-        cookie.create(timer.endtime + '_' + $elems.task.val() + '_' + timer.barWidth);
+        cookie.create(timer.endtime + '|' + helper.escapeInput($elems.task.val()) + '|' + timer.barWidth);
 
         // clear inputs
         $elems.task.val('');

@@ -206,3 +206,10 @@ input[type=text] {
 		box-shadow: none;
 	}
 }
+
+@media screen and (max-width: 380px) {
+	
+	h1 {
+		font-size: 1.9em;
+	}
+}
