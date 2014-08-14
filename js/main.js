@@ -1,34 +1,37 @@
 'use strict';
 
-var $elems = {
-        // DOM elements
-        startscreen: $('#startscreen'),
-        countdown: $('#countdown'),
-        progress:  $('#progress-bar'),
-        completed: $('#completed'),
-        trigger:   $('#trigger'),
-        timer:     $('#timer'),
-        goalwrap:  $('#goal-outer'),
-        goal:      $('#goal'),
-        task:      $('#task'),
-        details:   $('#details')
-    },
-    $timepicker = {
-        // timepicker elements
-        arrowdown: $('.arrow.down'),
-        arrowup:   $('.arrow.up'),
-        hour1: $('#hour1'),
-        hour2: $('#hour2'),
-        min1:  $('#min1'),
-        min2:  $('#min2')
-    },
-    results = {
-        congrats: [121, 777],
-        fail:     [387, 442]
-    },
-    helper = {},
-    timer  = {},
-    cookie = {};
+var 
+
+$elems = {
+    // DOM elements
+    startscreen: $('#startscreen'),
+    countdown: $('#countdown'),
+    progress:  $('#progress-bar'),
+    completed: $('#completed'),
+    trigger:   $('#trigger'),
+    errors:    $('#flash-error'),
+    timer:     $('#timer'),
+    goalwrap:  $('#goal-outer'),
+    goal:      $('#goal'),
+    task:      $('#task'),
+    details:   $('#details')
+},
+$timepicker = {
+    // timepicker elements
+    arrowdown: $('.arrow.down'),
+    arrowup:   $('.arrow.up'),
+    hour1: $('#hour1'),
+    hour2: $('#hour2'),
+    min1:  $('#min1'),
+    min2:  $('#min2')
+},
+results = {
+    congrats: [121, 777],
+    fail:     [387, 442]
+},
+helper = {},
+cookie = {},
+timer;
 
 
 ////////////
@@ -38,13 +41,15 @@ var $elems = {
 ////////////
 
 helper.timeToSeconds = function() {
-    var hours = parseInt($timepicker.hour1.html() + $timepicker.hour2.html());
-    var mins  = parseInt($timepicker.min1.html() + $timepicker.min2.html());
+    var hours = parseInt($timepicker.hour1.html() + $timepicker.hour2.html()),
+        mins  = parseInt($timepicker.min1.html() + $timepicker.min2.html());
 
     return hours * 3600 + mins * 60;
 };
 
-helper.clearTimepicker = function() {
+helper.clearInputs = function() {
+    $elems.errors.empty().removeAttr('style');
+
     $timepicker.hour1.html(0);
     $timepicker.hour2.html(0);
     $timepicker.min1.html(0);
@@ -83,6 +88,22 @@ helper.showCountdown = function(setting) {
     }
 };
 
+jQuery.fn.shake = function() {
+    var $this = $(this);
+
+    if ($this.hasClass('shake')) return;
+
+    $this
+        .addClass('shake')
+        .animate({ left: -5 }, 20).animate({ left: 0 }, 100).animate({ left: 5 }, 20).animate({ left: 0 }, 100)
+        .animate({ left: -5 }, 20).animate({ left: 0 }, 100).animate({ left: 5 }, 20).animate({ left: 0 }, 100)
+        .animate({ left: -5 }, 20).animate({ left: 0 }, 100).animate({ left: 5 }, 20).animate({ left: 0 }, 100, 
+            function() { $this.removeClass('shake'); }
+        );
+
+    return $this;
+};
+
 
 ////////////
 //  
@@ -90,113 +111,130 @@ helper.showCountdown = function(setting) {
 //        
 ////////////
 
+timer = (function() {
 
-timer.interval = null;
-timer.endtime  = null;
-timer.barWidth = null;
+    var 
 
-timer.init = function(settings) {
-    // unix timestamp (in seconds) at which the timer will reach zero
-    timer.endtime  = settings.endtime || Math.floor((new Date().getTime() + settings.timeLimit * 1000) / 1000);
+    interval = null,
+    endtime  = null,
+    barWidth = null,
 
-    // width of the progress bar (based on the task's time limit in seconds)
-    timer.barWidth = settings.barWidth || settings.timeLimit;
+    getEndtime = function() { return endtime; },
+    getBarWidth = function() { return barWidth; },
 
-    // display the goal to be completed
-    $elems.goalwrap.prepend('... time left to: ');
-    $elems.goal.html(settings.task.toLowerCase());
+    init = function(settings) {
+        if (typeof settings === 'undefined' || $.isEmptyObject(settings)) return;
 
-    // show the checkbox
-    $elems.trigger.show();
+        // unix timestamp (in seconds) at which the timer will reach zero
+        endtime  = settings.endtime || Math.floor((new Date().getTime() + settings.timeLimit * 1000) / 1000);
 
-    // start the timer
-    timer.interval = setInterval(timer.tick, 1000);
-    timer.tick();
-};
+        // width of the progress bar (based on the task's time limit in seconds)
+        barWidth = settings.barWidth || settings.timeLimit;
 
-timer.tick = function() {
-    // calculate the current time based on how much time is left until the end time
-    var timeLeft = timer.endtime - Math.floor(new Date().getTime() / 1000),
-        sec      = timeLeft % 60,
-        min      = Math.floor((timeLeft / 60) % 60),
-        hour     = Math.floor(timeLeft / 3600),
-        timeHasRunOut = timeLeft < 1;
+        // display the goal to be completed
+        $elems.goalwrap.prepend('... time left to: ');
+        $elems.goal.html(settings.task.toLowerCase());
 
-    // display the current time
-    $elems.timer.html(timer.addZero(hour) + ' : ' + timer.addZero(min) + ' : ' +  timer.addZero(sec));
+        // show the checkbox
+        $elems.trigger.show();
 
-    // fill the progress bar
-    timer.progressBar(timer.barWidth - timeLeft);
+        // start the timer
+        interval = setInterval(tick, 1000);
+        tick();
+    },
 
-    // if the task has been completed, call the success callback
-    if ($elems.completed.is(':checked')) {
-        timer.finish();
-        timer.callback(1);
-        cookie.destroy();
+    tick = function() {
+        // calculate the current time based on how much time is left until the end time
+        var timeLeft = endtime - Math.floor(new Date().getTime() / 1000),
+            sec      = timeLeft % 60,
+            min      = Math.floor((timeLeft / 60) % 60),
+            hour     = Math.floor(timeLeft / 3600),
+            timeHasRunOut = timeLeft < 1;
 
-    } else if (timeHasRunOut) {
-        timer.finish();
-        timer.callback(0);
-        cookie.destroy();
-    }
-};
+        // display the current time
+        $elems.timer.html(addZero(hour) + ' : ' + addZero(min) + ' : ' +  addZero(sec));
 
-// add a leading zero to hour/min/sec if the number is less than 10
-timer.addZero = function(num) {
-    return (num < 10 ? '0' : '') + num;
-};
+        // fill the progress bar
+        progressBar(barWidth - timeLeft);
 
-timer.progressBar = function(progress) {
-    var barFilled = 100 - (progress / timer.barWidth * 100);
+        // if the task has been completed, call the success callback
+        if ($elems.completed.is(':checked')) {
+            finish();
+            callback(1);
+            cookie.destroy();
 
-    // if there is time left and the progress bar is still filled
-    if (barFilled) {
-        $elems.progress.css('width', barFilled + '%');
+        } else if (timeHasRunOut) {
+            finish();
+            callback(0);
+            cookie.destroy();
+        }
+    },
 
-        // set the bar colour based on percentage filled
-        if      (barFilled > 50)                    $elems.progress.css('background-color', '#2ecc71');
-        else if (barFilled <= 50 && barFilled > 30) $elems.progress.css('background-color', '#f1c40f');
-        else if (barFilled <= 30 && barFilled > 10) $elems.progress.css('background-color', '#f39c12');
-        else if (barFilled <= 10)                   $elems.progress.css('background-color', '#e74c3c');
-    } else {
-       $elems.progress.css('width', '0');
-    }
-};
+    // add a leading zero to hour/min/sec if the number is less than 10
+    addZero = function(num) {
+        return (num < 10 ? '0' : '') + num;
+    },
 
-// stop and reset the timer
-timer.finish = function() {
-    // stop the timer
-    clearInterval(timer.interval);
+    progressBar = function(progress) {
+        var barFilled = 100 - (progress / barWidth * 100);
 
-    // hide and uncheck the checkbox
-    $elems.trigger.hide();
-    $elems.completed.removeAttr('checked');
+        // if there is time left and the progress bar is still filled
+        if (barFilled) {
+            $elems.progress.css('width', barFilled + '%');
 
-    // clear timer and goal display
-    $elems.timer.empty();
-    $elems.goal.empty();
-    helper.clearTextNodes($elems.goalwrap);
-};
+            // set the bar colour based on percentage filled
+            if      (barFilled > 50)                    $elems.progress.css('background-color', '#2ecc71');
+            else if (barFilled <= 50 && barFilled > 30) $elems.progress.css('background-color', '#f1c40f');
+            else if (barFilled <= 30 && barFilled > 10) $elems.progress.css('background-color', '#f39c12');
+            else if (barFilled <= 10)                   $elems.progress.css('background-color', '#e74c3c');
+        } else {
+           $elems.progress.css('width', '0');
+        }
+    },
 
-// random congrats & fail callbacks
-timer.callback = function(status) {
-    var randCongrats = results.congrats[Math.floor(Math.random() * results.congrats.length)],
-        randFail     = results.fail[Math.floor(Math.random() * results.fail.length)],
-        nextPage;
+    // stop and reset the timer
+    finish = function() {
+        // stop the timer
+        clearInterval(interval);
 
-    if (status) {
-        nextPage = 'congrats/' + randCongrats + '.html';
-        $elems.goalwrap.prepend('Congratulations!');
+        // hide and uncheck the checkbox
+        $elems.trigger.hide();
+        $elems.completed.removeAttr('checked');
 
-    } else {
-        nextPage = 'fail/' + randFail + '.html';
-        $elems.goalwrap.prepend('Oh No! Time\'s up for the task...');
-    }
+        // clear timer and goal display
+        $elems.timer.empty();
+        $elems.goal.empty();
+        helper.clearTextNodes($elems.goalwrap);
+    },
 
-    $('body').fadeOut(1000, function() {
-        window.location = nextPage;
-    });
-};
+    // random congrats & fail callbacks
+    callback = function(status) {
+        var randCongrats = results.congrats[Math.floor(Math.random() * results.congrats.length)],
+            randFail     = results.fail[Math.floor(Math.random() * results.fail.length)],
+            nextPage;
+
+        if (status) {
+            nextPage = 'congrats/' + randCongrats + '.html';
+            $elems.goalwrap.prepend('Congratulations!');
+
+        } else {
+            nextPage = 'fail/' + randFail + '.html';
+            $elems.goalwrap.prepend('Oh No! Time\'s up for the task...');
+        }
+
+        $('body').fadeOut(1000, function() {
+            window.location = nextPage;
+        });
+    };
+
+    return {
+        init: init,
+        finish: finish,
+        getEndtime: getEndtime,
+        getBarWidth: getBarWidth
+    };
+
+})();
 
 
 ////////////
@@ -256,8 +294,8 @@ $(document).ready(function() {
 
         // start the timer using the previous end time and task
         timer.init({
-            endtime: c[0],
-            task: c[1],
+            endtime:  c[0],
+            task:     c[1],
             barWidth: c[2]
         });
     }
@@ -265,8 +303,8 @@ $(document).ready(function() {
 
 // timepicker increase number
 $timepicker.arrowup.on('click', function() {
-    var $digit = $(this).siblings('.digit');
-    var increment = parseInt($digit.html()) + 1;
+    var $digit = $(this).siblings('.digit'),
+        increment = parseInt($digit.html()) + 1;
 
     if      ($digit[0].id === 'min1' && increment > 5) $digit.html(0);
     else if (increment > 9) $digit.html(0);
@@ -276,8 +314,8 @@ $timepicker.arrowup.on('click', function() {
 
 // timepicker decrease number
 $timepicker.arrowdown.on('click', function() {
-    var $digit = $(this).siblings('.digit');
-    var decrement = parseInt($digit.html()) - 1;
+    var $digit = $(this).siblings('.digit'),
+        decrement = parseInt($digit.html()) - 1;
 
     if      ($digit[0].id === 'min1' && decrement < 0) $digit.html(5);
     else if (decrement > 9) $digit.html(0);
@@ -289,12 +327,23 @@ $timepicker.arrowdown.on('click', function() {
 $('#go').on('click', function() {
 
     // get inputted time in seconds
-    var time = helper.timeToSeconds();
+    var time = helper.timeToSeconds(),
+        previousErrors = $elems.errors.children().length;
 
     // validation check for empty fields
     if (!$elems.task.val() || !time) {
 
-        alert('Both a task and a time limit are needed!');
+        $elems.errors.css({
+            'margin': '0 0 40px 0',
+            'padding': '10px 30px',
+            'border': '2px solid #e91830'
+        });
+
+        $elems.errors.empty();
+
+        if (!$elems.task.val()) $elems.errors.prepend('<li>Please input a task (e.g. Make Lunch)</li>');
+        if (!time)              $elems.errors.append('<li>Please set a time limit</li>');
+        if (previousErrors)     $elems.errors.shake();
 
     } else {
     
@@ -307,11 +356,11 @@ $('#go').on('click', function() {
         });
 
         // create a cookie
-        cookie.create(timer.endtime + '|' + helper.escapeInput($elems.task.val()) + '|' + timer.barWidth);
+        cookie.create(timer.getEndtime() + '|' + helper.escapeInput($elems.task.val()) + '|' + timer.getBarWidth());
 
         // clear inputs
         $elems.task.val('');
-        helper.clearTimepicker();
+        helper.clearInputs();
     }
 });
 
