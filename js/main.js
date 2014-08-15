@@ -66,6 +66,21 @@ helper.escapeInput = function(str) {
     return str.replace(/[|]/g, '');
 };
 
+helper.updateTimepicker = function(settings) {
+    if (typeof settings === 'undefined' || $.isEmptyObject(settings)) return;
+
+    var $digit   = settings.obj.siblings('.digit'),
+        min1     = $digit[0].id === 'min1',
+        modifier = settings.increase ? 1 : -1,
+        update   = parseInt($digit.html()) + modifier;
+    
+    if      (update > 9 || 
+             min1 && update > 5) $digit.html(0);
+    else if (min1 && update < 0) $digit.html(5);
+    else if (update < 0)         $digit.html(9);
+    else                         $digit.html(update);
+};
+
 helper.showStartscreen = function() {
     // clear text in #goal wrapper 
     helper.clearTextNodes($elems.goalwrap);
@@ -160,12 +175,12 @@ timer = (function() {
         // if the task has been completed, call the success callback
         if ($elems.completed.is(':checked')) {
             finish();
-            callback(1);
+            callback(true);
             cookie.destroy();
 
         } else if (timeHasRunOut) {
             finish();
-            callback(0);
+            callback(false);
             cookie.destroy();
         }
     },
@@ -208,12 +223,12 @@ timer = (function() {
     },
 
     // random congrats & fail callbacks
-    callback = function(status) {
+    callback = function(congrats) {
         var randCongrats = results.congrats[Math.floor(Math.random() * results.congrats.length)],
             randFail     = results.fail[Math.floor(Math.random() * results.fail.length)],
             nextPage;
 
-        if (status) {
+        if (congrats) {
             nextPage = 'congrats/' + randCongrats + '.html';
             $elems.goalwrap.prepend('Congratulations!');
 
@@ -303,24 +318,18 @@ $(document).ready(function() {
 
 // timepicker increase number
 $timepicker.arrowup.on('click', function() {
-    var $digit = $(this).siblings('.digit'),
-        increment = parseInt($digit.html()) + 1;
-
-    if      ($digit[0].id === 'min1' && increment > 5) $digit.html(0);
-    else if (increment > 9) $digit.html(0);
-    else if (increment < 0) $digit.html(9);
-    else    $digit.html(increment);
+    helper.updateTimepicker({
+        obj: $(this),
+        increase: true
+    });
 });
 
 // timepicker decrease number
 $timepicker.arrowdown.on('click', function() {
-    var $digit = $(this).siblings('.digit'),
-        decrement = parseInt($digit.html()) - 1;
-
-    if      ($digit[0].id === 'min1' && decrement < 0) $digit.html(5);
-    else if (decrement > 9) $digit.html(0);
-    else if (decrement < 0) $digit.html(9);
-    else    $digit.html(decrement);
+    helper.updateTimepicker({
+        obj: $(this),
+        increase: false
+    });
 });
 
 // "Go" button clicked and new task is submitted
