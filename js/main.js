@@ -69,7 +69,7 @@ helper.escapeInput = function(str) {
 helper.updateTimepicker = function(settings) {
     if (typeof settings === 'undefined' || $.isEmptyObject(settings)) return;
 
-    var $digit   = settings.obj.siblings('.digit'),
+    var $digit   = $(this).siblings('.digit'),
         min1     = $digit[0].id === 'min1',
         modifier = settings.increase ? 1 : -1,
         update   = parseInt($digit.html()) + modifier;
@@ -82,8 +82,7 @@ helper.updateTimepicker = function(settings) {
 };
 
 helper.showStartscreen = function() {
-    // clear text in #goal wrapper 
-    helper.clearTextNodes($elems.goalwrap);
+    $elems.progress.removeAttr('style');
 
     // show the startscreen so a new task can be submitted
     $elems.countdown.hide();
@@ -212,6 +211,8 @@ timer = (function() {
         // stop the timer
         clearInterval(interval);
 
+        $elems.goal.hide();
+
         // hide and uncheck the checkbox
         $elems.trigger.hide();
         $elems.completed.removeAttr('checked');
@@ -318,16 +319,14 @@ $(document).ready(function() {
 
 // timepicker increase number
 $timepicker.arrowup.on('click', function() {
-    helper.updateTimepicker({
-        obj: $(this),
+    helper.updateTimepicker.call(this, {
         increase: true
     });
 });
 
 // timepicker decrease number
 $timepicker.arrowdown.on('click', function() {
-    helper.updateTimepicker({
-        obj: $(this),
+    helper.updateTimepicker.call(this, {
         increase: false
     });
 });
