@@ -93,6 +93,8 @@ helper.showCountdown = function(setting) {
     // close info details (if opened) and hide startscreen
     if ($elems.details.is(':visible')) $elems.details.hide();
     $elems.startscreen.hide();
+
+    $elems.goal.show();
     
     // show the countdown
     if (setting && setting.noFade) {
@@ -211,15 +213,13 @@ timer = (function() {
         // stop the timer
         clearInterval(interval);
 
-        $elems.goal.hide();
-
         // hide and uncheck the checkbox
         $elems.trigger.hide();
         $elems.completed.removeAttr('checked');
 
         // clear timer and goal display
         $elems.timer.empty();
-        $elems.goal.empty();
+        $elems.goal.empty().hide();
         helper.clearTextNodes($elems.goalwrap);
     },
 
