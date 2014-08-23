@@ -26,8 +26,17 @@ $timepicker = {
     min2:  $('#min2')
 },
 results = {
-    congrats: [121, 777],
-    fail:     [387, 442]
+    congrats: [
+        'dblrnbw', 'smile', 'average-at-life', 'couple-months',
+        'diamond', 'golden-jazz', 'good-on-you', 'heart-in-it',
+        'islt-pop', 'nicely-done', 'phil-good', 'proud-of-you',
+        'shreddied', 'smile', 'spunky', 'thatll-do', 'wee-green-jig'
+    ],
+    fail: [
+        'bad-try', 'booo', 'firework', 'get-cereals',
+        'golf-carts', 'my-plants', 'noodle', 'scamburger',
+        'whoopsie'
+    ]
 },
 helper = {},
 cookie = {},
