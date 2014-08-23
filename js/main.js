@@ -30,12 +30,19 @@ results = {
         'dblrnbw', 'smile', 'average-at-life', 'couple-months',
         'diamond', 'golden-jazz', 'good-on-you', 'heart-in-it',
         'islt-pop', 'nicely-done', 'phil-good', 'proud-of-you',
-        'shreddied', 'smile', 'spunky', 'thatll-do', 'wee-green-jig'
+        'shreddied', 'smile', 'spunky', 'thatll-do', 'wee-green-jig',
+        '50-shades', 'affection', 'bagels', 'bathroom', 'blue-car',
+        'cached', 'chicken-weasel', 'dancing-shoes', 'did-thing', 
+        'done-did', 'doughnuts', 'enjoyed', 'felicity', 'finnish', 'flip',
+        'guts', 'happy-computer', 'john-donne', 'like', 'moby', 'more-fun',
+        'moss', 'over-9000', 'stuff', 'tears-of-happy', 'wizened', 'you-go'
     ],
     fail: [
         'bad-try', 'booo', 'firework', 'get-cereals',
         'golf-carts', 'my-plants', 'noodle', 'scamburger',
-        'whoopsie'
+        'whoopsie', 'dishonour', 'doperoni', 'flop', 'intersection',
+        'lacrosse', 'life-savings', 'mad-scientists', 'nogo', 'pea-brain', 
+        'sasberry', 'squirt-bottle', 'sunday', 'time-dream', 'utter', 'why'
     ]
 },
 helper = {},
