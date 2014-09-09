@@ -79,7 +79,7 @@ helper.clearTextNodes = function($el) {
 };
 
 helper.escapeInput = function(str) {
-    return str.replace(/[|]/g, '');
+    return str.replace(/[|]|[;]/g, '').trim();
 };
 
 helper.updateTimepicker = function(settings) {
@@ -315,7 +315,7 @@ cookie.destroy = function() {
 ////////////
 
 
-$(document).ready(function() {
+(function() {
     // if a cookie is already set, go straight to the timer & task currently in progress
     if (cookie.get()) {
         var c = cookie.get()[1].split('|'); 
@@ -331,7 +331,7 @@ $(document).ready(function() {
             barWidth: c[2]
         });
     }
-});
+})();
 
 // timepicker increase number
 $timepicker.arrowup.on('click', function() {
@@ -351,11 +351,12 @@ $timepicker.arrowdown.on('click', function() {
 $('#go').on('click', function() {
 
     // get inputted time in seconds
-    var time = helper.timeToSeconds(),
+    var time           = helper.timeToSeconds(),
+        escapedInput   = helper.escapeInput($elems.task.val()), 
         previousErrors = $elems.errors.children().length;
 
     // validation check for empty fields
-    if (!$elems.task.val() || !time) {
+    if (!escapedInput || !time) {
 
         $elems.errors.css({
             'margin': '0 0 40px 0',
@@ -363,11 +364,17 @@ $('#go').on('click', function() {
             'border': '2px solid #e91830'
         });
 
+        $('html, body').animate({ scrollTop: 0 }, 'easeOutQuart');
+
         $elems.errors.empty();
 
-        if (!$elems.task.val()) $elems.errors.prepend('<li>Please input a task (e.g. Make Lunch)</li>');
-        if (!time)              $elems.errors.append('<li>Please set a time limit</li>');
-        if (previousErrors)     $elems.errors.shake();
+        if (!escapedInput) {
+            // clear improper input
+            $elems.task.val('');
+            $elems.errors.prepend('<li>Please input a task (e.g. Make Lunch)</li>');
+        }
+        if (!time)          $elems.errors.append('<li>Please set a time limit</li>');
+        if (previousErrors) $elems.errors.shake();
 
     } else {
     
@@ -375,12 +382,12 @@ $('#go').on('click', function() {
 
         // start the timer with the new task and time limit
         timer.init({
-            task: helper.escapeInput($elems.task.val()),
+            task: escapedInput,
             timeLimit: time
         });
 
         // create a cookie
-        cookie.create(timer.getEndtime() + '|' + helper.escapeInput($elems.task.val()) + '|' + timer.getBarWidth());
+        cookie.create(timer.getEndtime() + '|' + escapedInput + '|' + timer.getBarWidth());
 
         // clear inputs
         $elems.task.val('');
