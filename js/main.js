@@ -123,15 +123,16 @@ helper.showCountdown = function(setting) {
 jQuery.fn.shake = function() {
     var $this = $(this);
 
-    if ($this.hasClass('shake')) return;
-
-    $this
+    if (!$this.hasClass('shake')) {
+        
+        $this
         .addClass('shake')
         .animate({ left: -5 }, 20).animate({ left: 0 }, 100).animate({ left: 5 }, 20).animate({ left: 0 }, 100)
         .animate({ left: -5 }, 20).animate({ left: 0 }, 100).animate({ left: 5 }, 20).animate({ left: 0 }, 100)
         .animate({ left: -5 }, 20).animate({ left: 0 }, 100).animate({ left: 5 }, 20).animate({ left: 0 }, 100, 
             function() { $this.removeClass('shake'); }
         );
+    }
 
     return $this;
 };
@@ -151,7 +152,7 @@ timer = (function() {
     endtime  = null,
     barWidth = null,
 
-    getEndtime = function() { return endtime; },
+    getEndtime  = function() { return endtime; },
     getBarWidth = function() { return barWidth; },
 
     init = function(settings) {
