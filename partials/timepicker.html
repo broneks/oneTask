@@ -1,0 +1,49 @@
+<div class="timepicker">
+	<div class="hours">
+		<div class="digit-wrapper">
+			<div class="arrow up" ng-click="updateTimepicker('hour1', 'increase')">
+				<div class="increase"></div>
+			</div>
+			<div class="digit hour1" ng-bind="timeLimit.hour1"></div>
+			<div class="arrow down" ng-click="updateTimepicker('hour1', 'decrease')">
+				<div class="decrease"></div>
+			</div>
+		</div>
+
+		<div class="digit-wrapper">
+			<div class="arrow up" ng-click="updateTimepicker('hour2', 'increase')">
+				<div class="increase"></div>
+			</div>
+			<div class="digit hour2" ng-bind="timeLimit.hour2"></div>
+			<div class="arrow down" ng-click="updateTimepicker('hour2', 'decrease')">
+				<div class="decrease"></div>
+			</div>
+		</div>
+		<div class="tag">HOURS</div>
+	</div>
+	
+	<div class="colon">:</div>
+	
+	<div class="mins">
+		<div class="digit-wrapper">
+			<div class="arrow up" ng-click="updateTimepicker('min1', 'increase')">
+				<div class="increase"></div>
+			</div>
+			<div class="digit min1" ng-bind="timeLimit.min1"></div>
+			<div class="arrow down" ng-click="updateTimepicker('min1', 'decrease')">
+				<div class="decrease"></div>
+			</div>
+		</div>
+
+		<div class="digit-wrapper">
+			<div class="arrow up" ng-click="updateTimepicker('min2', 'increase')">
+				<div class="increase"></div>
+			</div>
+			<div class="digit min2" ng-bind="timeLimit.min2"></div>
+			<div class="arrow down" ng-click="updateTimepicker('min2', 'decrease')">
+				<div class="decrease"></div>
+			</div>
+		</div>
+		<div class="tag">MINUTES</div>
+	</div>
+</div>

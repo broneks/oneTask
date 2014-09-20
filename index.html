@@ -1,114 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="YHOJ">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>you had ONE job!</title>
+	<title>You Had One Job</title>
 
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300italic,300,400italic' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="css/grayred.css">
 </head>
 <body>
 	<div id="wrapper">
-		<!-- countdown view where timer and goal are displayed -->
-		<div id="countdown">
-			<div id="progress-outer">
-				<div id="progress-bar"></div>				
-			</div>
-
-			<div id="count">
-				<span id="timer"></span>
-				
-				<span id="goal-outer">
-					<span id="goal"></span>
-				</span>
-			</div>
-
-			<div id="trigger">
-				<label for="completed">Completed the task?</label>
-				<input type="checkbox" id="completed">
-			</div>
-
-			<input type="button" id="cancel" value="Cancel">
-		</div>
-		
-		<!-- input form for setting a task and time limit -->
-		<div id="startscreen">
-			<h1>you had <em>one</em> job.</h1>
-
-			<ul id="flash-error"></ul>
-
-			<label for="task">your task</label>
-			<input type="text" id="task" placeholder="Make Lunch">
-
-			<label for="time-limit">time limit</label>
-			<div id="timepicker">
-				<div id="hours">
-					<div class="digit-wrapper">
-						<div class="arrow up">
-							<div class="increase"></div>
-						</div>
-						<div class="digit" id="hour1">0</div>
-						<div class="arrow down">
-							<div class="decrease"></div>
-						</div>
-					</div>
-
-					<div class="digit-wrapper">
-						<div class="arrow up">
-							<div class="increase"></div>
-						</div>
-						<div class="digit" id="hour2">0</div>
-						<div class="arrow down">
-							<div class="decrease"></div>
-						</div>
-					</div>
-					<div class="tag">HOURS</div>
-				</div>
-				
-				<div class="colon">:</div>
-				
-				<div id="mins">
-					<div class="digit-wrapper">
-						<div class="arrow up">
-							<div class="increase"></div>
-						</div>
-						<div class="digit" id="min1">0</div>
-						<div class="arrow down">
-							<div class="decrease"></div>
-						</div>
-					</div>
-
-					<div class="digit-wrapper">
-						<div class="arrow up">
-							<div class="increase"></div>
-						</div>
-						<div class="digit" id="min2">0</div>
-						<div class="arrow down">
-							<div class="decrease"></div>
-						</div>
-					</div>
-					<div class="tag">MINUTES</div>
-				</div>
-			</div>
-
-			<input type="button" id="go" value="start">
-
-			<!-- Info about the app -->
-			<a href="" id="info">Need help getting started?</a>
-			<div id="details">
-				<p>There's no need for task lists... Just do one thing, and do it for yourself. Set a task and complete it before time runs out.</p>
-
-				<p>If you complete the task in time, then good for you! You can check off that it's completed (be honest!) and you will receive a special celebration at random. If you don't manage to complete the task before the timer runs out, then come on... you had <em>one</em> job!! You'll have to reset it and try again.</p>
-
-				<p>Feel free to close the app and come back to it later in the same browser. The timer for your last task will keep running!</p>
-
-				<p>Have fun!</p>
-			</div>
-		</div>
+		<ng-view></ng-view>
 	</div>
 	
-	<script src="js/jquery-1.11.1.min.js"></script>
-	<script src="js/main.js"></script>
+	<script src="bower_components/angular/angular.min.js"></script>
+	<script src="bower_components/angular-route/angular-route.min.js"></script>
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="js/services.js"></script>
+	<script src="js/controllers.js"></script>
+	<script src="js/directives.js"></script>
+	<script src="js/app.js"></script>
 </body>
 </html>
