@@ -31,43 +31,58 @@ angular.module('YHOJservices', [])
 }])
 
 .factory('HelperService', function() {
-	
+	return {
+		timeToMilli: function(time) {
+			var hours = parseInt(time.hour1 + time.hour2),
+			    mins  = parseInt(time.min1 + time.min2);
+
+			return (hours * 3600000) + (mins * 6000);
+		},
+		timeToUnix: function(time) {
+			var time = this.timeToMilli(time);
+
+			return Math.floor(new Date().getTime() + time);
+		}
+	};
 })
 
-.factory('FormService', ['FlashService', function(FlashService) {
+.factory('FormService', ['$location', 'FlashService', function($location, FlashService) {
+	var formData;
+
 	return {
 		checkValid: function(input) {
 			var input = input || {};
 
-			if (input.task && input.limit) {
+			if (input.task && input.limit && input.limitUnix) {
 				FlashService.clear();
+				formData = input;
+
 				return true;
 			}
 			FlashService.show({
 				'task':       !!input.task,
 				'time limit': !!input.limit
 			});
+
 			return false;
 		},
-		timeToSeconds: function(time) {
-			var hours = parseInt(time.hour1 + time.hour2),
-			    mins  = parseInt(time.min1 + time.min2);
-
-			    console.log(hours * 3600 + mins * 60);
-
-			return hours * 3600 + mins * 60;
+		startCountdown: function(input) {
+			$location.path('/countdown');
+		},
+		getFormData: function() {
+			return formData;
 		}
 	};
 }])
 
-.factory('TimerService', ['', function() {
+// .factory('TimerService', ['', function() {
 
-}])
+// }])
 
-.factory('CountdownService', ['', function() {
+// .factory('CountdownService', ['', function() {
 
-}])
+// }])
 
-.factory('CandCService', ['', function() {
+// .factory('CandCService', ['', function() {
 
-}])
+// }])

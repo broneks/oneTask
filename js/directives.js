@@ -52,4 +52,3 @@ angular.module('YHOJdirectives', [])
 		}
 	};
 })
-

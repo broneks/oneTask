@@ -4,11 +4,11 @@
 	</div>
 
 	<div id="count">
-		<span id="timer"></span>
+		<!-- <span id="timer" ng-bind="input.limit"></span> -->
+
+		<timer id="timer" end-time="input.limitUnix">{{hhours}} : {{mminutes}} : {{sseconds}}</timer>
 		
-		<span id="goal-outer">
-			<span id="goal"></span>
-		</span>
+		<span id="goal" ng-bind="input.task"></span>
 	</div>
 
 	<div id="trigger">

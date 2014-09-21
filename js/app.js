@@ -2,7 +2,8 @@ angular.module('YHOJ', [
     'ngRoute', 
     'YHOJdirectives', 
     'YHOJservices',
-    'YHOJcontrollers'
+    'YHOJcontrollers',
+    'timer'
 ])
 
 .run(['$browser', function($browser) {
