@@ -1,28 +1,53 @@
-angular.module('YHOJ', [
+(function() {
+  'use strict';
+
+  angular
+  .module('YHOJ', [
     'ngRoute', 
     'YHOJdirectives', 
     'YHOJservices',
     'YHOJcontrollers',
-    'timer'
-])
+    'timer',
+    'LocalStorageModule'
+  ])
+  // .run(run)
+  .config(config);
 
-.run(['$browser', function($browser) {
-    $browser.baseHref = function() { return '/0yhoj/' };
-}])
 
-.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+  // run.$inject = ['$browser'];
+  
+  // function run($browser) {
+  //   $browser.baseHref = function() { return '/yhoj/' };
+  // }
+  
+  
+  config.$inject = ['$routeProvider', 'localStorageServiceProvider'];
+  
+  function config($routeProvider, localStorageServiceProvider) {
+      
     $routeProvider
-        .when('/', {
-            templateUrl: 'views/startscreen.html',
-            controller: 'startscreenCtrl'
-        })
-        .when('/countdown', {
-            templateUrl: 'views/countdown.html',
-            controller: 'countdownCtrl'
-        })
-        .otherwise({ 
-            redirectTo: '/' 
-        });
-
-	$locationProvider.html5Mode(true);
-}])
+      .when('/', {
+        templateUrl: 'views/startscreen.html',
+        controller: 'startscreenCtrl'
+      })
+      .when('/countdown', {
+        templateUrl: 'views/countdown.html',
+        controller: 'countdownCtrl'
+      })
+      .when('/congrats', {
+        templateUrl: 'views/result.html',
+        controller: 'congratsCtrl'
+      })
+      .when('/fail', {
+        templateUrl: 'views/result.html',
+        controller: 'failCtrl'
+      })
+      .otherwise({ 
+        redirectTo: '/' 
+      });
+    
+    localStorageServiceProvider
+      .setPrefix('yhoj')
+      .setStorageCookie(7, '/');
+  }
+})();

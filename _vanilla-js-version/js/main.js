@@ -29,7 +29,7 @@ results = {
     congrats: [
         'dblrnbw', 'smile', 'average-at-life', 'couple-months',
         'diamond', 'golden-jazz', 'good-on-you', 'heart-in-it',
-        'islt-pop', 'nicely-done', 'phil-good', 'proud-of-you',
+        'isle-pop', 'nicely-done', 'phil-good', 'proud-of-you',
         'shreddied', 'smile', 'spunky', 'thatll-do', 'wee-green-jig',
         '50-shades', 'affection', 'bagels', 'bathroom', 'blue-car',
         'cached', 'chicken-weasel', 'dancing-shoes', 'did-thing', 
@@ -42,7 +42,7 @@ results = {
         'golf-carts', 'my-plants', 'noodle', 'scamburger',
         'whoopsie', 'dishonour', 'doperoni', 'flop', 'intersection',
         'lacrosse', 'life-savings', 'mad-scientists', 'nogo', 'pea-brain', 
-        'sasberry', 'squirt-bottle', 'sunday', 'time-dream', 'utter', 'why'
+        'sassberry', 'squirt-bottle', 'sunday', 'time-dream', 'utter', 'why'
     ]
 },
 helper = {},

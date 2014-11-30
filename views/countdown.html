@@ -1,20 +1,17 @@
 <div id="countdown">
-	<div id="progress-outer">
-		<div id="progress-bar"></div>				
-	</div>
+	<p class="label">time left:</p>
+	<progress-bar ng-cloak></progress-bar>
 
-	<div id="count">
-		<!-- <span id="timer" ng-bind="input.limit"></span> -->
-
-		<timer id="timer" end-time="input.limitUnix">{{hhours}} : {{mminutes}} : {{sseconds}}</timer>
+	<div id="count">	
+		<timer id="timer" end-time="input.limitUnix" interval="1000" finish-callback="finished()" ng-model="t" ng-cloak>{{hhours}} : {{mminutes}} : {{sseconds}}</timer>
 		
-		<span id="goal" ng-bind="input.task"></span>
+		<p class="label">to complete the task:</p>
+		<p id="goal" ng-bind="input.task" ng-cloak></p>
 	</div>
 
-	<div id="trigger">
-		<label for="completed">Completed the task?</label>
-		<input type="checkbox" id="completed">
-	</div>
+	<div class="controls">
+		<button type="button" class="completed" ng-click="finished($event)">Completed</button>
 
-	<input type="button" id="cancel" value="Cancel">
+		<button type="button" class="cancel" value="Cancel" ng-click="cancel()">Cancel</button>
+	</div>
 </div>

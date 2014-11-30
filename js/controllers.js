@@ -1,40 +1,112 @@
-angular.module('YHOJcontrollers', ['YHOJservices'])
+(function() {
+	'use strict';
 
-.controller('startscreenCtrl', ['$scope', 'FormService', 'HelperService', function($scope, FormService, HelperService) {
-	$scope.timeLimit = {
-		hour1: '0',
-		hour2: '0',
-		min1 : '0',
-		min2 : '0'
-	};
-	// $scope.task = 'test';
+	angular
+		.module('YHOJcontrollers', [
+			'YHOJservices'
+		])
+		.controller('startscreenCtrl', startscreenCtrl)
+		.controller('countdownCtrl', countdownCtrl)
+		.controller('failCtrl', failCtrl)
+		.controller('congratsCtrl', congratsCtrl);
 
-	$scope.submit = function() {
-		var input = {
-				task : $scope.task,
-				limit: HelperService.timeToMilli($scope.timeLimit),
-				limitUnix: HelperService.timeToUnix($scope.timeLimit)
-			},
-			valid = FormService.checkValid(input);
 
-		if (valid) {
-			FormService.startCountdown();
-		} else {
-			jQuery('html, body').animate({ scrollTop: 0 }, 'easeOutQuart');
+	startscreenCtrl.$inject = ['$scope', 'FormService', 'HelperService']; 
+
+	function startscreenCtrl($scope, FormService, HelperService) {
+		$scope.timeLimit = {
+			hour1: '0',
+			hour2: '0',
+			min1 : '0',
+			min2 : '0'
+		};
+		$scope.task = '';
+
+		if (FormService.isStorageSet()) {
+			FormService.startTask();
 		}
-	};
 
-	// $scope.submit();
-}])
+		$scope.submit = function() {
+			var input = {
+						task : $scope.task,
+						limit: HelperService.timeToMilli($scope.timeLimit),
+						limitUnix: HelperService.timeToUnix($scope.timeLimit)
+					},
+					valid = FormService.validate(input);
 
-.controller('countdownCtrl', ['$scope', 'FormService', function($scope, FormService) {
-	$scope.input = FormService.getFormData();
-}])
+			if (valid) {
+				FormService.startTask(input);
+			}
+		};
+	}
 
-// .controller('congratsCtrl', ['$scope', function($scope) {
 
-// }])
+	countdownCtrl.$inject = ['$scope', '$location', '$timeout', 'CountdownService']; 
 
-// .controller('failCtrl', ['$scope', function($scope) {
+	function countdownCtrl($scope, $location, $timeout, CountdownService, timer) {
+		var countdownData = CountdownService.getInputData();
 
-// }])
+		if (!countdownData) {
+			$location.path('/');
+		}
+
+		$scope.input = countdownData;
+		$scope.timerRunning = true;
+		
+		$scope.startTimer = function() {
+			$scope.$broadcast('timer-start');
+			$scope.timerRunning = true;
+		};
+		
+		$scope.stopTimer = function() {
+			$scope.$broadcast('timer-stop');
+			$scope.timerRunning = false;
+		};
+
+		$scope.cancel = function() {
+			$scope.stopTimer();
+			CountdownService.cancelTask();
+			$location.path('/');
+		};
+
+		$scope.finished = function(event) {
+			var redirectPath = '/fail';
+
+			CountdownService.finishTask();
+			$scope.stopTimer();
+
+			// user clicked "completed"
+			if (event && event.type === 'click') {
+				redirectPath = '/congrats';
+			}
+
+			$timeout(function() {
+				$location.path(redirectPath);
+			});
+		};
+	}
+
+
+	congratsCtrl.$inject = ['$scope', '$location', 'ResultService']; 
+
+	function congratsCtrl($scope, $location, ResultService) {
+		if (ResultService.allSystemsGo()) {
+			$scope.heading = 'Congratulations!';
+			$scope.result = 'views/congrats/' + ResultService.getRandomResult('congrats') + '.html';
+		} else {
+			$location.path('/');
+		}
+	}
+
+
+	failCtrl.$inject = ['$scope', '$location', 'ResultService'];
+
+	function failCtrl($scope, $location, ResultService) {
+		if (ResultService.allSystemsGo()) {
+			$scope.heading = 'Fail...';
+			$scope.result = 'views/fail/' + ResultService.getRandomResult('fail') + '.html';
+		} else {
+			$location.path('/');
+		}
+	}
+})();

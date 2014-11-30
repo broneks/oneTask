@@ -1,14 +1,12 @@
 <div id="startscreen">
-	<h1>you had <em>one</em> job.</h1>
-
 	<ul class="flash-error" ng-if="flash" ng-class="{ 'shake': flash.shake }">
-		<li ng-repeat="error in flash.errors" ng-cloak>Please set a {{ error }}</li>
+		<li ng-repeat="error in flash.errors" ng-cloak>{{ error }}</li>
 	</ul>
 
-	<label for="task">your task</label>
+	<label for="task" class="label">your task</label>
 	<input type="text" id="task" placeholder="Make Lunch" ng-model="task">
 
-	<label for="time-limit">time limit</label>
+	<label for="time-limit" class="label">time limit</label>
 	<time-picker></time-picker>
 
 	<input type="button" id="go" value="start" ng-click="submit()">
