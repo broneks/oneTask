@@ -1,19 +1,19 @@
 (function() {
   'use strict';
-
+  
   angular
-  .module('YHOJ', [
-    'ngRoute', 
-    'YHOJdirectives', 
-    'YHOJservices',
-    'YHOJcontrollers',
-    'timer',
-    'LocalStorageModule'
-  ])
-  // .run(run)
-  .config(config);
-
-
+    .module('YHOJ', [
+      'ngRoute', 
+      'YHOJdirectives', 
+      'YHOJservices',
+      'YHOJcontrollers',
+      'timer',
+      'LocalStorageModule'
+    ])
+    // .run(run)
+    .config(config);
+  
+  
   // run.$inject = ['$browser'];
   
   // function run($browser) {
@@ -22,9 +22,9 @@
   
   
   config.$inject = ['$routeProvider', 'localStorageServiceProvider'];
-  
+
   function config($routeProvider, localStorageServiceProvider) {
-      
+  
     $routeProvider
       .when('/', {
         templateUrl: 'views/startscreen.html',
